@@ -1,0 +1,46 @@
+name: gf_contracts_test
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+
+  #--------------------------------------------------------------------
+  # TEST
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      #-------------------------------
+      # GIT_CHECKOUT
+      - uses: actions/checkout@v3
+
+      #-------------------------------
+      # INSTALL BROWNIE
+      - name: install Brownie
+        run: |
+          python3 -m pip install --user pipx  
+          python3 -m pipx ensurepath
+          pipx install eth-brownie
+          brownie --version
+      
+      - name: install Solidity dependencies
+        run: |
+          brownie pm install OpenZeppelin/openzeppelin-contracts@4.4.1
+      
+      #-------------------------------
+      # COMPILE PROJECT
+      - name: compile project
+        run: |
+          brownie compile
+
+      #-------------------------------
+      # TEST PROJECT
+      - name: test project
+        run: |
+          brownie test -s --gas --coverage
+
+      #-------------------------------
+
+  #--------------------------------------------------------------------

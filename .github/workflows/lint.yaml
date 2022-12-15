@@ -1,0 +1,39 @@
+name: gf_contracts_lint
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+
+  #--------------------------------------------------------------------
+  # LINT
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      #-------------------------------
+      # GIT_CHECKOUT
+      - uses: actions/checkout@v3
+
+      #-------------------------------
+      # INIT_NODEJS
+      - name: init node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      #-------------------------------
+      # INSTALL SOLHINT
+      - name: install SolHint
+        run: npm install solhint
+
+      #-------------------------------
+      # LINT
+      - name: Run linters
+        run: |
+          solhint 'contracts/**/*.sol'          
+
+      #-------------------------------
+
+  #--------------------------------------------------------------------
